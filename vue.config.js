@@ -17,7 +17,7 @@ const target = TARGET_NODE ? 'server' : 'client';
 
 module.exports = {
   outputDir: './dist',
-  productionSourceMap: false,
+  productionSourceMap: true,
   css: {
     extract: false, // 目前还没分离出css,正在努力尝试
   },
