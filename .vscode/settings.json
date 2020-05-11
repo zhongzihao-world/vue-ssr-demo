@@ -1,0 +1,73 @@
+{
+  /*——————————————————————————基础设置——————————————————————————*/
+  "editor.detectIndentation": false,
+  "editor.autoClosingBrackets": "always", // 自动补全括号
+  "explorer.confirmDelete": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "minapp-vscode.disableAutoConfig": true,
+  // "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.fontSize": 14, // 字体
+  "editor.tabSize": 2, // tabsize
+  "window.zoomLevel": -1,
+  "files.associations": {
+    "*.cjson": "jsonc",
+    "*.wxss": "css",
+    "*.wxs": "javascript",
+    "*.html": "html"
+  },
+  "emmet.includeLanguages": {
+    "wxml": "html"
+  },
+  "open-in-browser.default": "Chrome",
+  /*——————————————————————————插件设置——————————————————————————*/
+  "workbench.iconTheme": "vscode-icons", // icon
+  // 自动补全html标签,需先安装HTML Snippets插件
+  "emmet.triggerExpansionOnTab": true,
+  // 让vue中的js按编辑器自带的ts格式进行格式化
+  "vetur.format.defaultFormatter.html": "js-beautify-html",
+  "vetur.validation.template": false,
+  "vetur.format.defaultFormatterOptions": {
+    "js-beautify-html": {
+      "wrap_line_length": 200,
+      "wrap_attributes": "auto"
+    },
+    "prettyhtml": {
+      "printWidth": 100,
+      "singleQuote": false,
+      "wrapAttributes": false,
+      "sortAttributes": false
+    },
+    "prettier": {
+      "semi": false,
+      "singleQuote": true,
+      "trailingComma": "all"
+    }
+  },
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "vetur.format.defaultFormatter.ts": "vscode-typescript",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // #eslint配置，需安装eslint插件
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  // 虽然报错，但好像还是不能删了，why？
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "html",
+      "autoFix": true
+    },
+    {
+      "language": "vue",
+      "autoFix": true
+    },
+    {
+      "language": "typescript",
+      "autoFix": true
+    }
+  ]
+}
