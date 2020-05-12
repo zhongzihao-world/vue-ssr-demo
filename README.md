@@ -88,11 +88,11 @@ extract: false, // 目前还没分离出css,正在努力尝试
 - 设置 webpack-dev-serve 允许跨域
   headers: { 'Access-Control-Allow-Origin': '*' },
 - 设置publicPath
-// 加上端口前缀才能访问到静态资源，生产环境因为是集成到后端项目设置跟路径就OK了加上端口前缀才能访问到静态资源，生产环境因为是集成到后端项目设置跟路径就OK了
+// 加上端口前缀才能访问到静态资源，生产环境因为是集成到后端项目设置跟路径就OK了
   process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : '/',
 ```
 
-3 分离 chunk 较少打包体积
+3 分离 chunk 减少打包体积
 
 ```bash
 // 可以分离大部分依赖，使打包出来的chunk体积变小
