@@ -2,8 +2,8 @@
 
 ## Vue SSR Demo
 
-> 使用 Vue-cli4.0+Typescript+SSR 的小目 Demo
-> 怎么说呢，从 vue3 开始，之前的 build 目录旧没有了，想要对 webpack 配置进行修改的话，只能在根目录下新建 **vue.config.js**文件，具体修改可参照[vue-cli 官网](https://cli.vuejs.org/)
+> 使用 Vue-cli4.0+Typescript+SSR 的小 Demo
+> 怎么说呢，从 vue3 开始，之前的 build 目录没有了，想要对 webpack 配置进行修改的话，只能在根目录下新建 **vue.config.js**文件，具体修改可参照[vue-cli 官网](https://cli.vuejs.org/)
 > 之前用的是 vue-cli2.+,此次直接升级到 vue-cli4.+并且直接上了 TS，踩了不少坑，不过好在是熬过来了，分享一下我的项目 Demo
 
 ### 已实现
