@@ -10,7 +10,7 @@
 
 - 项目搭建
 - 本地 ssr 开发环境搭建（koa）
-- 使用 Vuex 实现数据预期
+- 使用 Vuex 实现数据预取(此demo已删掉，因为涉及到后端接口)
 - 打包 chunk 分离优化
 - Jenkins + Docker 持续集成、部署
 - 集成到后端项目（egg.js）
@@ -43,8 +43,8 @@ $ npm run build:linux   # linux下打包命令
 │   └── server.js # 服务逻辑
 ├── src # 主要源码
 │   ├── api # 请求管理
-│   │   └── api.config.ts 接口管理
-│   │   └── axios.config.ts 拦截器管理
+│   │   └── api.config.ts # 接口管理
+│   │   └── axios.config.ts # 拦截器管理
 │   ├── assets # 资源
 │   │   └── ......
 │   ├── plugins # 插件
@@ -174,6 +174,8 @@ export default (context: any) =>
 ```
 
 4 注意不要在组件的 mounted 钩子之前进行 dom 相关的操作，因为服务端会执行到这些钩子
+
+
 5 实现本地 ssr
 
 ```bash
