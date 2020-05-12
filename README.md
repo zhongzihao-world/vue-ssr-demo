@@ -81,7 +81,7 @@ $ npm run build:linux   # linux下打包命令
 extract: false, // 目前还没分离出css,正在努力尝试
 ```
 
-2 本地 ssr 搭建（）
+2 本地 ssr 搭建
 
 ```bash
 本地搭建ssr环境，webpack-dev-server跑本地服务时，会打一次包并进行热更新，所以思路是再起一个node服务，读取监听打包的chunk文件进行ssr的操作，这里有两个点
