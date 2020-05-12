@@ -1,30 +1,38 @@
-#  简介
+# 简介
+
 ## Vue SSR Demo
-> 使用Vue-cli4.0+Typescript+SSR 的小目Demo
-怎么说呢，从vue3开始，之前的build目录旧没有了，想要对webpack配置进行修改的话，只能在根目录下新建 **vue.config.js**文件，具体修改可参照[vue-cli官网](https://cli.vuejs.org/)
-之前用的是vue-cli2.+,此次直接升级到vue-cli4.+并且直接上了TS，踩了不少坑，不过好在是熬过来了，分享一下我的项目Demo
-### 已实现：
+
+> 使用 Vue-cli4.0+Typescript+SSR 的小目 Demo
+> 怎么说呢，从 vue3 开始，之前的 build 目录旧没有了，想要对 webpack 配置进行修改的话，只能在根目录下新建 **vue.config.js**文件，具体修改可参照[vue-cli 官网](https://cli.vuejs.org/)
+> 之前用的是 vue-cli2.+,此次直接升级到 vue-cli4.+并且直接上了 TS，踩了不少坑，不过好在是熬过来了，分享一下我的项目 Demo
+
+### 已实现
+
 - 项目搭建
-- 本地ssr开发环境搭建（koa）
-- 使用Vuex实现数据预期
-- 打包chunk分离优化
+- 本地 ssr 开发环境搭建（koa）
+- 使用 Vuex 实现数据预期
+- 打包 chunk 分离优化
 - Jenkins + Docker 持续集成、部署
 - 集成到后端项目（egg.js）
+
 ---
 
 ## 主要命令
- ```bash
+
+```bash
 $ npm install   # 安装依赖
 $ npm run dev   # 本地开发
-  ├── 8080  本地非ssr环境
-  └── 3000  本地ssr环境
+ ├── 8080  本地非ssr环境
+ └── 3000  本地ssr环境
 $ npm run build   # window下打包命令
 $ npm run build:linux   # linux下打包命令
- ```
+```
+
 ---
 
 ## 项目目录
-```
+
+```bash
 ┌── .vscode IDE工作区配置
 │   └── settings.json
 ├── dist # 静态资源（自动生成）
@@ -62,14 +70,19 @@ $ npm run build:linux   # linux下打包命令
 └── tsconfig.json # ts配置文件
 └── vue.config.js # webpack配置文件
 ```
+
 ---
 
-## webpack配置文件 解析
-1.  ** 关闭css分离 **
-``` bash
+## webpack 配置文件 解析
+
+1 关闭 css 分离
+
+```bash
 extract: false, // 目前还没分离出css,正在努力尝试
 ```
-2.  ** 本地ssr搭建（） **
+
+2 本地 ssr 搭建（）
+
 ```bash
 本地搭建ssr环境，webpack-dev-server跑本地服务时，会打一次包并进行热更新，所以思路是再起一个node服务，读取监听打包的chunk文件进行ssr的操作，这里有两个点
 - 设置 webpack-dev-serve 允许跨域
@@ -78,8 +91,10 @@ extract: false, // 目前还没分离出css,正在努力尝试
 // 加上端口前缀才能访问到静态资源，生产环境因为是集成到后端项目设置跟路径就OK了加上端口前缀才能访问到静态资源，生产环境因为是集成到后端项目设置跟路径就OK了
   process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : '/',
 ```
-3. 分离chunk较少打包体积
-``` bash
+
+3 分离 chunk 较少打包体积
+
+```bash
 // 可以分离大部分依赖，使打包出来的chunk体积变小
 // 客户端生产环境  才分离
 externals:
@@ -90,24 +105,31 @@ externals:
     }
   : undefined,
 ```
-4. 注入版本信息
-``` bash
+
+4 注入版本信息
+
+```bash
 new webpack.DefinePlugin({
   'process.env.NODE_ENV': `"${process.env.NODE_ENV || 'development'}"`, // 注意需要用双引号包住
 }),
 ```
-5. 关闭splitChunks
-``` bash
+
+5 关闭 splitChunks
+
+```bash
 chainWebpack: (config) => {
   config.optimization.splitChunks(undefined);
 },
 ```
+
 ---
 
 ## ssr 基本搭建
-1. 公共入口  main.ts
-``` bash
-// 防止单例污染，需要导出一个工厂函数  
+
+1 公共入口 main.ts
+
+```bash
+// 防止单例污染，需要导出一个工厂函数
 export function createApp(): any {
   const router = createRouter();
   const store = createStore();
@@ -119,16 +141,20 @@ export function createApp(): any {
   return { app, router, store };
 }
 ```
-2. 客户端入口 entry-client.ts
-``` bash
+
+2 客户端入口 entry-client.ts
+
+```bash
 // 挂载到app上
 const { app, router } = createApp();
 router.onReady(() => {
   app.$mount('#app');
 });
 ```
-3. 服务端入口 entry-server.ts
-``` bash
+
+3 服务端入口 entry-server.ts
+
+```bash
 // 匹配路由，需要返回一个promise，因为有可能是异步组件，若无匹配，则返回404
 import { createApp } from './main';
 export default (context: any) =>
@@ -146,14 +172,18 @@ export default (context: any) =>
     }, reject);
 });
 ```
-4. 注意不要在组件的 mounted钩子之前进行dom相关的操作，因为服务端会执行到这些钩子
-5. 实现本地ssr
-``` bash
+
+4 注意不要在组件的 mounted 钩子之前进行 dom 相关的操作，因为服务端会执行到这些钩子
+5 实现本地 ssr
+
+```bash
   - 读取web-dev-server打包出来的chunk并实时监听
   - 当chunk变化时，使用'vue-server-renderer'的renderToString，渲染成html字符串
 ```
-6. 本地ssr环境下，接口转发问题
-``` bash
+
+6 本地 ssr 环境下，接口转发问题
+
+```bash
   // 虽然可以配置 devServer proxy，但是ssr环境在另一个node端口下，需要对接口进行转发
   - 对接口进行规范，接口类的请求都加上'/api'前缀
   - koa server.js 下，对匹配的接口类请求，使用'http-proxy-middleware'和'koa2-connect'进行接口转发
