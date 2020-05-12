@@ -173,16 +173,39 @@ export default (context: any) =>
 });
 ```
 
-4 注意不要在组件的 mounted 钩子之前进行 dom 相关的操作，因为服务端会执行到这些钩子
+4 路由 router.index.ts
 
-5 实现本地 ssr
+```bash
+// 注意要模式改为 history，让路由请求能到后端
+export function createRouter() {
+  return new Router({
+    mode: 'history',
+    routes: [
+      {
+        path: '/',
+        name: 'Home',
+        component: () => import(/* webpackChunkName: "Home" */ './views/Home.vue'),
+      },
+      {
+        path: '/about',
+        name: 'About',
+        component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      },
+    ],
+  });
+}
+```
+
+5 注意不要在组件的 mounted 钩子之前进行 dom 相关的操作，因为服务端会执行到这些钩子
+
+6 实现本地 ssr
 
 ```bash
   - 读取web-dev-server打包出来的chunk并实时监听
   - 当chunk变化时，使用'vue-server-renderer'的renderToString，渲染成html字符串
 ```
 
-6 本地 ssr 环境下，接口转发问题
+7 本地 ssr 环境下，接口转发问题
 
 ```bash
   // 虽然可以配置 devServer proxy，但是ssr环境在另一个node端口下，需要对接口进行转发
